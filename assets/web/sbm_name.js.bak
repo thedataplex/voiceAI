@@ -1,0 +1,138 @@
+const recognition = new webkitSpeechRecognition() || new SpeechRecognition();
+recognition.interimResults = true;
+recognition.continuous = true;
+
+const name = document.getElementById("name");
+
+
+window.fun_name = function fun_name()
+{
+	fun_speak(speak_name);
+	navigator.mediaDevices.getUserMedia({ audio: true })
+	.then(stream => {
+         
+		// Initialize the media recorder object
+		audioRecorder_name = new MediaRecorder(stream);
+            
+		// NameDataAvailable event is fired when the recording is stopped
+		//audioRecorder_name.addEventListener('NameDataAvailable', e => {
+		audioRecorder_name.addEventListener('dataavailable', e => {
+			audioChunks_name.push(e.data);
+		});
+            
+		// start recording when the start button is clicked
+		/*
+		startButton.addEventListener('click', () => {
+			//fun_speak(speak_name);
+			audioChunks_name = [];
+			audioRecorder_name.start();
+			//output_name.innerHTML = 'Recording started for Patient Name! Speak now.';
+			recognition.start();
+		});
+		*/
+		fun_set_start_button();
+
+/*
+recognition.onresult = event => {
+    const result = event.results[event.results.length - 1][0].transcript;
+    //outputDiv.textContent = result;
+	name.value = result;
+};
+
+recognition.onend = () => {
+    startButton.disabled = false;
+    startButton.textContent = 'Start Recording';
+};
+
+*/
+
+		/*
+		// stop recording when the stop button is clicked
+		stopButton.addEventListener('click', () => {
+			audioRecorder_name.stop();
+			//output_name.innerHTML = 'Recording stopped for Patient Name! Click on the play button to play the recorded audio.';
+			//window.fun_dob();
+			//fun_dob();
+		});
+
+		*/
+		fun_set_stop_button();
+		fun_set_next_button();
+		fun_set_play_button();
+
+		/*
+		nextButton.addEventListener('click', () => {
+			fun_dob();
+		});
+		*/
+            
+		/*
+		// play the recorded audio when the play button is clicked
+		playButton.addEventListener('click', () => {
+			//audioRecorder_name.stop();
+			fun_stop_recording_all();
+			//output_name.innerHTML = 'Playing the recorded audio for Patient Name!';
+			const blobObj = new Blob(audioChunks_name, { type: 'audio/webm' });
+			const audioUrl = URL.createObjectURL(blobObj);
+			const audio = new Audio(audioUrl);
+			audio.play();
+		});
+		*/
+	}).catch(err => {
+		// If the user denies permission to record audio, then display an error.
+		alert('Error: ' + err);
+	});
+}
+
+// start recording when the start button is clicked
+function fun_set_start_button()
+{
+	startButton.addEventListener('click', () => {
+		//fun_speak(speak_name);
+		audioChunks_name = [];
+		audioRecorder_name.start();
+		//output_name.innerHTML = 'Recording started for Patient Name! Speak now.';
+		recognition.start();
+	});
+}
+
+function fun_set_stop_button()
+{
+	// stop recording when the stop button is clicked
+	stopButton.addEventListener('click', () => {
+		audioRecorder_name.stop();
+		//output_name.innerHTML = 'Recording stopped for Patient Name! Click on the play button to play the recorded audio.';
+		//window.fun_dob();
+		//fun_dob();
+	});
+}
+
+// Switch to next field 
+function fun_set_next_button()
+{
+	nextButton.addEventListener('click', () => {
+		fun_dob();
+	});
+}
+
+// play the recorded audio when the play button is clicked
+function fun_set_play_button()
+{
+	playButton.addEventListener('click', () => {
+		//audioRecorder_name.stop();
+		fun_stop_recording_all();
+		//output_name.innerHTML = 'Playing the recorded audio for Patient Name!';
+		const blobObj = new Blob(audioChunks_name, { type: 'audio/webm' });
+		const audioUrl = URL.createObjectURL(blobObj);
+		const audio = new Audio(audioUrl);
+		audio.play();
+	});
+}
+
+window.fun_begin = function fun_begin()
+{
+	fun_name();
+	//fun_dob();
+	//fun_address();
+	//fun_contactnum();
+}

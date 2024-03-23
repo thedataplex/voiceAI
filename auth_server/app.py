@@ -1,7 +1,10 @@
 from flask import Flask, request, jsonify
 import psycopg2
+from flask_cors import CORS
+from datetime import datetime
 
 app = Flask(__name__)
+CORS(app)
 
 # Database connection
 conn = psycopg2.connect(
@@ -35,6 +38,25 @@ def login():
         return jsonify({'message': 'Login successful'}), 200
     else:
         return jsonify({'message': 'Invalid username or password'}), 401
+
+
+# Add a new route to handle saving records
+@app.route('/save_record', methods=['POST'])
+def save_record():
+    data = request.json
+    first_name = data['first_name']
+    last_name = data['last_name']
+    dob = datetime.strptime(data['dob'], '%Y-%m-%d').date()  # Convert string to datetime object
+    ssn = data['ssn']
+    zip_code = data['zip_code']
+    
+    try:
+        cursor.execute("INSERT INTO records (first_name, last_name, dob, ssn, zip_code) VALUES (%s, %s, %s, %s, %s)",
+                       (first_name, last_name, dob, ssn, zip_code))
+        conn.commit()
+        return jsonify({'message': 'Record saved successfully'}), 201
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)

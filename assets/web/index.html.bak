@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SBS Demo</title>
+	<style>
+		label {
+			display: inline-block;
+			width: 220px;
+			font-size: 24px;
+      }
+	</style>
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+</head>
+<body  style="background-color: lightblue; ">
+	<header>
+		<h1>SBS for HOSPICE</h1>
+	</header>
+	<label for="Name">Name: </label>
+	<input type="text" id="name" name="name" maxlength="32">
+	<button id="startb_name" class="fa fa-microphone fa-1.5x"><span class="bi bi-mic"></span></button>
+	<button id="stopb_name">Stop</button>
+	<button id="playb_name">Play Recorded Audio</button>
+	<div id = "output_name"> </div>
+	<br>
+	<!--
+	<button id="startb">Start</button>
+	<button id="startb" class="fa fa-microphone fa-1.5x"><span class="bi bi-mic"></span></button>
+	<audio id="audioPlay" controls></audio>
+	<i class="fa fa-microphone fa-1.5x"></i>
+	<button type="button" class="btn btn-light"><span class="bi bi-mic"></span></button>
+	<button type="button" class="btn btn-link"><span class="bi bi-mic"></span></button>
+	-->
+
+	<label for="dob">Date of Birth:</label>
+	<input type="text" id="dob" name="dob" maxlength="10">
+	<button type="button" id="startb" class="fa fa-microphone fa-1.5x"><span class="bi bi-mic"></span></button>
+	<button id="stopb">Stop</button>
+	<button id="playb">Play Recorded Audio</button>
+	<div id = "output"> </div>
+	<!--
+	<button id="startb">Start Capture</button>
+	<button id="stop-button">Stop Capture</button>
+	-->
+	<br>
+
+	<label for="address">Address:</label>
+	<input type="text" id="addr" name="addr" maxlength="128">
+	<button type="button" id="startb" class="fa fa-microphone fa-1.5x"><span class="bi bi-mic"></span></button>
+	<button id="stopb">Stop</button>
+	<!--
+	<button id="startb">Start Capture</button>
+	<button id="stop-button">Stop Capture</button>
+	-->
+	<br>
+
+	<label for="contactnum">Contact Number:</label>
+	<input type="text" id="contactnum" name="contactnum" maxlength="10">
+	<button type="button" id="startb" class="fa fa-microphone fa-1.5x"><span class="bi bi-mic"></span></button>
+	<button id="stopb">Stop</button>
+	<!--
+	<button id="startb">Start Capture</button>
+	<button id="stop-button">Stop Capture</button>
+	-->
+	<br>
+
+	<label for="tod">Type of Disease:</label>
+	<input type="text" id="tod" name="tod" maxlength="64">
+	<button type="button" id="startb" class="fa fa-microphone fa-1.5x"><span class="bi bi-mic"></span></button>
+	<button id="stopb">Stop</button>
+	<!--
+	<button id="startb">Start Capture</button>
+	<button id="stop-button">Stop Capture</button>
+	-->
+	<br>
+
+	<label for="prfmed">Preferred Medication:</label>
+	<input type="text" id="prfmed" name="prfmed" maxlength="64">
+	<button type="button" id="startb" class="fa fa-microphone fa-1.5x"><span class="bi bi-mic"></span></button>
+	<button id="stopb">Stop</button>
+	<!--
+	<button id="startb">Start Capture</button>
+	<button id="stop-button">Stop Capture</button>
+	-->
+	<br>
+
+	<label for="nearbyp">NearBy Pharmacy:</label>
+	<input type="text" id="nearbyp" name="nearbyp" maxlength="64">
+	<button type="button" id="startb" class="fa fa-microphone fa-1.5x"><span class="bi bi-mic"></span></button>
+	<button id="stopb">Stop</button>
+	<!--
+	<button id="startb">Start Capture</button>
+	<button id="stop-button">Stop Capture</button>
+	-->
+	<br>
+
+	<label for="insurance">Insurance:</label>
+	<input type="text" id="insurance" name="insurance" maxlength="64">
+	<button type="button" id="startb" class="fa fa-microphone fa-1.5x"><span class="bi bi-mic"></span></button>
+	<button id="stopb">Stop</button>
+	<!--
+	<button id="startb">Start Capture</button>
+	<button id="stop-button">Stop Capture</button>
+	-->
+	<br>
+
+	<label for="insuranceid">Insurance ID:</label>
+	<input type="text" id="insuranceid" name="insuranceid" maxlength="64">
+	<button type="button" id="start-button" class="fa fa-microphone fa-1.5x"><span class="bi bi-mic"></span></button>
+	<button id="stopb">Stop</button>
+	<!--
+	<button id="start-button">Start Capture</button>
+	<button id="stop-button">Stop Capture</button>
+	-->
+	<br>
+
+	<script src="sbm_main.js"></script>
+	<script src="sbm_name.js"></script>
+	<script src="sbm_address.js"></script>
+
+</body>
+</html>

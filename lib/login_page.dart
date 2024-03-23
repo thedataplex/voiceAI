@@ -1,7 +1,11 @@
 // login_page.dart
 
 import 'package:flutter/material.dart';
+import 'package:login_app/speech_to_text.dart';
 import 'backend_service.dart';
+import 'webview_page.dart';
+import 'speech_to_text.dart';
+
 
 class LoginPage extends StatelessWidget {
   final TextEditingController usernameController = TextEditingController();
@@ -38,6 +42,10 @@ class LoginPage extends StatelessWidget {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text('Login successful')),
                     );
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(builder: (context) => WebViewPage()),);
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => SpeechToTextPage()));
                   } else {
                     throw Exception('Failed to login');
                   }
