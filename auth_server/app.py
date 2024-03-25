@@ -2,16 +2,20 @@ from flask import Flask, request, jsonify
 import psycopg2
 from flask_cors import CORS
 from datetime import datetime
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
 
 # Database connection
 conn = psycopg2.connect(
-    dbname='postgres',
-    user='postgres',
-    password='Stocker@365',
-    host='localhost'
+    dbname = os.getenv("DB_NAME"),
+    user = os.getenv("DB_USER"),
+    password = os.getenv("DB_PASSWORD"),
+    host = os.getenv("DB_HOST"),
 )
 cursor = conn.cursor()
 
