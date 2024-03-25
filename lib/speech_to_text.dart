@@ -137,17 +137,30 @@ void _listen()  {
     }
   }
 
-  void _submitRecord(List<String> updatedAnswers) {
+  void _submitRecord(List<String> updatedAnswers) async {
     // Logic to submit record to backend
-    BackendService.saveRecord(
-      answers[0], // First Name
-      answers[1], // Last Name
-      answers[2], // DOB
-      answers[3], // SSN
-      answers[4], // Zip Code
+    bool success = await BackendService.saveRecord(
+      updatedAnswers[0], // First Name
+      updatedAnswers[1], // Last Name
+      updatedAnswers[2], // DOB
+      updatedAnswers[3], // SSN
+      updatedAnswers[4], // Zip Code
     );
-    // Optionally, navigate to another page or show a success message
+    if (success) {
+    print('Record saved successfully.');
+    // Optionally, navigate to a success page or show a success message.
+    // For example, using Navigator to pop or push to a different widget.
+    // Navigator.of(context).pop(); // Go back to the previous screen
+    // or
+    // Navigator.of(context).push(MaterialPageRoute(builder: (context) => SuccessPage()));
+  } else {
+    print('Failed to save the record.');
+    // Optionally, show an error message to the user.
+    // You can use a dialog, snackbar, or another method to show the error.
   }
+}
+    // Optionally, navigate to another page or show a success message
+
 
 @override
 Widget build(BuildContext context) {
