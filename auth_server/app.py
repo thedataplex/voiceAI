@@ -54,7 +54,17 @@ def save_record():
     dob = datetime.strptime(data['dob'], '%Y-%m-%d').date()  # Convert string to datetime object
     ssn = data['ssn']
     zip_code = data['zip_code']
+
+    # Check if record already exists
+    cursor.execute("""
+        SELECT * FROM records WHERE 
+        first_name = %s AND last_name = %s AND dob = %s AND ssn = %s AND zip_code = %s
+        """, (first_name, last_name, dob, ssn, zip_code))
+
+    if cursor.fetchone():
+        return jsonify({'message': 'Record already exists'}), 409  # 409 Conflict
     
+    # Insert the record if it doesn't exist
     try:
         cursor.execute("INSERT INTO records (first_name, last_name, dob, ssn, zip_code) VALUES (%s, %s, %s, %s, %s) RETURNING id",
                        (first_name, last_name, dob, ssn, zip_code))

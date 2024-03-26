@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:flutter_tts/flutter_tts.dart';
 import 'backend_service.dart'; // Make sure you have this setup
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 
 class SpeechToTextPage extends StatefulWidget {
   @override
@@ -13,7 +16,9 @@ class _SpeechToTextPageState extends State<SpeechToTextPage> {
   late FlutterTts flutterTts;
   bool _isListening = false;
   String _text = '';
+  bool _isFieldReadOnly = true;
   late TextEditingController _textEditingController;
+  static const String baseUrl = 'http://127.0.0.1:5000/';
   List<String> prompts = [
     "What is the patient's first name?",
     "What is the patient's last name?",
@@ -57,11 +62,6 @@ class _SpeechToTextPageState extends State<SpeechToTextPage> {
   if (currentPromptIndex < prompts.length) {
     var result = await flutterTts.speak(prompts[currentPromptIndex]);
     if (result == 1) { // Check if speaking was successful
-      flutterTts.setCompletionHandler(() {
-        Future.delayed(Duration(seconds:1), () {
-          _listen();
-        });
-      });
     }
   } else { // This else block needs to be inside the async function.
     setState(() {
@@ -101,7 +101,7 @@ void _listen()  {
                 // Update the text field with the recognized words
                 _textEditingController.text = val.recognizedWords;
                 Future.delayed(Duration(seconds: 5), () {
-                  _submitField(val.recognizedWords);
+                  // _submitField(val.recognizedWords);
                 });
                 // _submitField(val.recognizedWords); // Process the recognized words
               });
@@ -116,6 +116,29 @@ void _listen()  {
   }
 }
 
+void _nextQuestion() {
+  // Save the current answer to the corresponding controller before moving to the next question
+  if (_textEditingController.text.isNotEmpty) {
+    answers[currentPromptIndex] = _textEditingController.text;
+    _controllers[currentPromptIndex].text = _textEditingController.text;
+  }
+
+  // Check if there are more questions
+  if (currentPromptIndex < prompts.length - 1) {
+    setState(() {
+      currentPromptIndex++;
+      _textEditingController.clear(); // Clear the text field for the next spoken answer
+    });
+    Future.delayed(Duration(milliseconds: 500), () {
+      _speakQuestion();
+    });
+  } else {
+    // Transition to the submit state
+    setState(() {
+      _showSubmitButton = true;
+    });
+  }
+}
   void _submitField(String fieldValue) {
     answers[currentPromptIndex] = fieldValue;
     _controllers[currentPromptIndex].text = fieldValue;
@@ -132,34 +155,39 @@ void _listen()  {
     } else {
       setState(() {
         _showSubmitButton = true;
-        // _submitRecord();
       });
     }
   }
 
-  void _submitRecord(List<String> updatedAnswers) async {
-    // Logic to submit record to backend
-    bool success = await BackendService.saveRecord(
-      updatedAnswers[0], // First Name
-      updatedAnswers[1], // Last Name
-      updatedAnswers[2], // DOB
-      updatedAnswers[3], // SSN
-      updatedAnswers[4], // Zip Code
-    );
-    if (success) {
-    print('Record saved successfully.');
-    // Optionally, navigate to a success page or show a success message.
-    // For example, using Navigator to pop or push to a different widget.
-    // Navigator.of(context).pop(); // Go back to the previous screen
-    // or
-    // Navigator.of(context).push(MaterialPageRoute(builder: (context) => SuccessPage()));
+
+void _submitRecord(List<String> updatedAnswers) async {
+  final url = Uri.parse("$baseUrl/save_record");
+  final response = await http.post(
+    url,
+    headers: {'Content-Type': 'application/json'},
+    body: jsonEncode({
+      'first_name': updatedAnswers[0],
+      'last_name': updatedAnswers[1],
+      'dob': updatedAnswers[2],
+      'ssn': updatedAnswers[3],
+      'zip_code': updatedAnswers[4],
+    }),
+  );
+
+  if (response.statusCode == 201) {
+    _showSnackBar(context, 'Record saved successfully.');
+  } else if (response.statusCode == 409) {
+    _showSnackBar(context, 'Record already exists.');
   } else {
-    print('Failed to save the record.');
-    // Optionally, show an error message to the user.
-    // You can use a dialog, snackbar, or another method to show the error.
+    _showSnackBar(context, 'An error occurred while saving the record.');
   }
 }
-    // Optionally, navigate to another page or show a success message
+
+void _showSnackBar(BuildContext context, String message) {
+  final snackBar = SnackBar(content: Text(message));
+  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+}
+
 
 
 @override
@@ -172,9 +200,12 @@ Widget build(BuildContext context) {
       ),
     ),
     floatingActionButton: FloatingActionButton(
-      onPressed: _isListening ? null : _listen,
+      onPressed: () {
+        if (!_isListening) _listen();
+      },
       child: Icon(_isListening ? Icons.mic_off : Icons.mic),
     ),
+
     body: SingleChildScrollView(
       child: Container(
         padding: EdgeInsets.all(32.0),
@@ -195,6 +226,24 @@ Widget build(BuildContext context) {
                 ),
               ),
               SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      // Enable TextField editing
+                      setState(() {
+                        _isFieldReadOnly = false; // This line needs modification.
+                      });
+                    },
+                    child: Text('Edit'),
+                  ),
+                  ElevatedButton(
+                      onPressed: _nextQuestion,
+                      child: Text('Next'),
+                  ),
+                ],
+              ),
             ] else ...[
               Text("Review your answers before submitting:"),
               ...List.generate(prompts.length, (index) {

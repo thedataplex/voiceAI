@@ -52,7 +52,7 @@ class BackendService {
       }),
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
       return true; // Record saved successfully
     } else {
       throw Exception('Failed to save record');
