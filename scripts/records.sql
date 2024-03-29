@@ -5,6 +5,6 @@ CREATE TABLE IF NOT EXISTS records (
     first_name VARCHAR(255) NOT NULL,
     last_name VARCHAR(255) NOT NULL,
     dob DATE NOT NULL,
-    ssn VARCHAR(11) NOT NULL,
+    ssn VARCHAR(15) NOT NULL,
     zip_code VARCHAR(10) NOT NULL
 );
