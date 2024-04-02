@@ -31,6 +31,7 @@ class LoginPage extends StatelessWidget {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
+                if (usernameController.text.isNotEmpty && passwordController.text.isNotEmpty) {
                 try {
                   // Perform login
                   bool success = await BackendService.login(
@@ -55,15 +56,41 @@ class LoginPage extends StatelessWidget {
                     SnackBar(content: Text('Failed to login: $e')),
                   );
                 }
-              },
+              } else {
+                // If one or both fields are empty, show an error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Both Username and Password are required')),
+      );
+    }
+  },
               child: Text('Login'),
             ),
-            ElevatedButton(
-              onPressed: () {
-                // Navigate to create account page
-                Navigator.pushNamed(context, '/createAccount');
-              },
-              child: Text('Create Account'),
+            Padding(
+                padding: EdgeInsets.only(top: 20),
+                child: GestureDetector(
+                  onTap: () {
+                    // Navigate to create account page
+                    Navigator.pushNamed(context, '/createAccount');
+                  },
+                  child: RichText(
+                    text: TextSpan(
+                      style: TextStyle(
+                        color: Colors.black, // Default text color
+                        fontSize: 16, // Default font size
+                      ),
+                      children: <TextSpan>[
+                        TextSpan(text: 'Not Already Signed Up? '),
+                        TextSpan(
+                          text: 'SignUp',
+                          style: TextStyle(
+                            decoration: TextDecoration.underline,
+                            color: Colors.blue,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
             ),
           ],
         ),

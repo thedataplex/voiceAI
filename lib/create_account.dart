@@ -1,11 +1,10 @@
-// create_account_page.dart
-
 import 'package:flutter/material.dart';
 import 'backend_service.dart';
 
 class CreateAccountPage extends StatelessWidget {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,13 +25,22 @@ class CreateAccountPage extends StatelessWidget {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
-                // Perform account creation
-                // Add your account creation logic here
-                 try {
+                // Check if both fields are filled
+                if (usernameController.text.isEmpty || passwordController.text.isEmpty) {
+                  // Show a snackbar message if any field is empty
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Please enter both username and password')),
+                  );
+                  return; // Stop further execution if validation fails
+                }
+
+                // If validation passes, proceed with account creation
+                try {
                   bool success = await BackendService.register(usernameController.text, passwordController.text);
                   if (success) {
                     // Registration successful
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Account created successfully')));
+                    Navigator.pop(context); // Optionally navigate back after successful registration
                   } else {
                     throw Exception('Failed to create account');
                   }
@@ -48,3 +56,4 @@ class CreateAccountPage extends StatelessWidget {
     );
   }
 }
+
