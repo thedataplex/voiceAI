@@ -5,7 +5,7 @@ class BackendService {
   // static const String baseUrl = 'http://10.0.2.2:5000'; // Update with your Flask server URL
   // static const String baseUrl = 'http://localhost:5000'; // Update with your Flask server URL
   // static const String baseUrl = 'http://127.0.0.1:5000/'; // Update with your Flask server URL
-  static const String baseUrl = 'https://voiceai-app-f156169b04de.herokuapp.com/';
+  static const String baseUrl = 'https://voiceai-app-f156169b04de.herokuapp.com';
   
 
   static Future register(String username, String password) async {
