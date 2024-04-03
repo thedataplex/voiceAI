@@ -18,7 +18,13 @@ class _SpeechToTextPageState extends State<SpeechToTextPage> {
   String _text = '';
   bool _isFieldReadOnly = true;
   late TextEditingController _textEditingController;
-  static const String baseUrl = 'http://127.0.0.1:5000/';
+  static const String localBaseUrl = 'http://127.0.0.1:5000/';
+  static const String productionBaseUrl = 'https://voiceai-app-f156169b04de.herokuapp.com';
+
+  static const String baseUrl = bool.fromEnvironment('dart.vm.product')
+      ? productionBaseUrl
+      : localBaseUrl;
+
   List<String> prompts = [
     "What is the patient's first name?",
     "What is the patient's last name?",
