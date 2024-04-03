@@ -19,7 +19,7 @@ CORS(app)
 #     host = os.getenv("DB_HOST"),
 # )
 DATABASE_URL = os.getenv("DATABASE_URL")
-conn = psycopg2.connect(DATABASE_URL)
+conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 cursor = conn.cursor()
 
 @app.route('/register', methods=['POST'])
