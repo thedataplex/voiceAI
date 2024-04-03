@@ -1,11 +1,19 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:flutter/foundation.dart' as foundation;
 
-class BackendService {
-  // static const String baseUrl = 'http://10.0.2.2:5000'; // Update with your Flask server URL
-  // static const String baseUrl = 'http://localhost:5000'; // Update with your Flask server URL
-  static const String baseUrl = 'http://127.0.0.1:5000/'; // Update with your Flask server URL
-  
+  class BackendService {
+  static String get baseUrl {
+    // Automatically switch between local and production URLs
+    if (foundation.kReleaseMode) {
+      // Use the Heroku URL in release mode
+      return 'https://voiceai-app-f156169b04de.herokuapp.com';
+    } else {
+      // Use the local server URL in debug mode
+      // Change this URL as per your local development setup if necessary
+      return 'http://127.0.0.1:5000';
+    }
+  }
 
   static Future register(String username, String password) async {
     final url = Uri.parse('$baseUrl/register');

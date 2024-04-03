@@ -11,13 +11,18 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
-# Database connection
-conn = psycopg2.connect(
-    dbname = os.getenv("DB_NAME"),
-    user = os.getenv("DB_USER"),
-    password = os.getenv("DB_PASSWORD"),
-    host = os.getenv("DB_HOST"),
-)
+# Get DATABASE_URL from environment variables
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+# Determine if connection is to a local database
+is_local_db = "localhost" in DATABASE_URL or "127.0.0.1" in DATABASE_URL
+
+# Connect with or without SSL mode based on the database location
+if is_local_db:
+    conn = psycopg2.connect(DATABASE_URL)
+else:
+    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+    
 cursor = conn.cursor()
 
 @app.route('/register', methods=['POST'])
