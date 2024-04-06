@@ -4,7 +4,9 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'backend_service.dart'; // Make sure you have this setup
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' as foundation;
+import 'package:flutter/foundation.dart' show kIsWeb, kReleaseMode;
 
 class SpeechToTextPage extends StatefulWidget {
   @override
@@ -18,12 +20,44 @@ class _SpeechToTextPageState extends State<SpeechToTextPage> {
   String _text = '';
   bool _isFieldReadOnly = true;
   late TextEditingController _textEditingController;
-  static const String localBaseUrl = 'http://127.0.0.1:5000/';
-  static const String productionBaseUrl = 'https://voiceai-app-f156169b04de.herokuapp.com';
+  // static const String localBaseUrl = 'http://127.0.0.1:5000/';
+  // static const String productionBaseUrl = 'https://voiceai-app-f156169b04de.herokuapp.com';
 
-  static const String baseUrl = bool.fromEnvironment('dart.vm.product')
-      ? productionBaseUrl
-      : localBaseUrl;
+  // static const String baseUrl = bool.fromEnvironment('dart.vm.product')
+  //     ? productionBaseUrl
+  //     : localBaseUrl;
+  // static String get baseUrl {
+  //   if (foundation.kReleaseMode) {
+  //     // Use the Heroku URL in release mode
+  //     return 'https://voiceai-app-f156169b04de.herokuapp.com';
+  //   } else {
+  //     // Check if the app is running on Android
+  //     if (Platform.isAndroid) {
+  //       // Use the Android emulator's base URL
+  //       return 'http://10.0.2.2:5000'; // Use 10.0.2.2 for Android emulator
+  //     } else {
+  //       // Use the local server URL in debug mode for other platforms
+  //       return 'http://127.0.0.1:5000/';
+  //     }
+  //   }
+  // }
+
+  static String get baseUrl {
+    // When running on the web, decide based on the release mode
+    if (kIsWeb) {
+      return kReleaseMode
+          ? 'https://voiceai-app-f156169b04de.herokuapp.com' // Production URL for web release
+          : 'http://127.0.0.1:5000'; // Local server URL for web debug
+    } 
+    // For Android emulator in debug mode
+    else if (!kIsWeb && !kReleaseMode && Platform.isAndroid) {
+      return 'http://10.0.2.2:5000'; // Special IP for Android emulator
+    } 
+    // Fallback for other non-web cases, including debug mode on devices other than Android emulator
+    else {
+      return 'http://127.0.0.1:5000'; // Local server URL
+    }
+  }
 
   List<String> prompts = [
     "What is the patient's first name?",

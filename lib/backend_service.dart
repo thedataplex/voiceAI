@@ -1,19 +1,48 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart' as foundation;
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb, kReleaseMode;
+
+
+  // class BackendService {
+  // static String get baseUrl {
+  //   // Automatically switch between local and production URLs
+  //   if (foundation.kReleaseMode) {
+  //     // Use the Heroku URL in release mode
+  //     return 'https://voiceai-app-f156169b04de.herokuapp.com';
+  //   } else {
+  //     if (Platform.isAndroid) {
+  //       // Use the local server URL in debug mode
+  //       // Change this URL as per your local development setup if necessary
+  //       return 'http://10.0.2.2:5000'; // Android emulator
+  //   } 
+  //   else {
+  //     // Use the local server URL in debug mode
+  //     // Change this URL as per your local development setup if necessary
+  //     return 'http://127.0.0.1:5000';
+  //   }
+  // }
+  // }
 
   class BackendService {
   static String get baseUrl {
-    // Automatically switch between local and production URLs
-    if (foundation.kReleaseMode) {
-      // Use the Heroku URL in release mode
-      return 'https://voiceai-app-f156169b04de.herokuapp.com';
-    } else {
-      // Use the local server URL in debug mode
-      // Change this URL as per your local development setup if necessary
-      return 'http://127.0.0.1:5000';
+    // When running on the web, decide based on the release mode
+    if (kIsWeb) {
+      return kReleaseMode
+          ? 'https://voiceai-app-f156169b04de.herokuapp.com' // Production URL for web release
+          : 'http://127.0.0.1:5000'; // Local server URL for web debug
+    } 
+    // For Android emulator in debug mode
+    else if (!kIsWeb && !kReleaseMode && Platform.isAndroid) {
+      return 'http://10.0.2.2:5000'; // Special IP for Android emulator
+    } 
+    // Fallback for other non-web cases, including debug mode on devices other than Android emulator
+    else {
+      return 'http://127.0.0.1:5000'; // Local server URL
     }
   }
+
 
   static Future register(String username, String password) async {
     final url = Uri.parse('$baseUrl/register');
