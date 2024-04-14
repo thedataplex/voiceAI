@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' as foundation;
 import 'package:flutter/foundation.dart' show kIsWeb, kReleaseMode;
+import 'summary_page.dart';
 
 class SpeechToTextPage extends StatefulWidget {
   @override
@@ -215,7 +216,22 @@ void _submitRecord(List<String> updatedAnswers) async {
   );
 
   if (response.statusCode == 201) {
+    Map<String, String> summaryData = {
+      "First Name": updatedAnswers[0],
+      "Last Name": updatedAnswers[1],
+      "Date of Birth": updatedAnswers[2],
+      "SSN": updatedAnswers[3],
+      "Zip Code": updatedAnswers[4],
+    };
+
+    // Show success message
     _showSnackBar(context, 'Record saved successfully.');
+
+    // Navigate to summary page after successful save
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SummaryPage(data: summaryData)),
+    );
   } else if (response.statusCode == 409) {
     _showSnackBar(context, 'Record already exists.');
   } else {
