@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'login_page.dart';
 
 class SummaryPage extends StatelessWidget {
   final Map<String, String> data;
@@ -32,6 +33,17 @@ class SummaryPage extends StatelessWidget {
             ],
           )).toList(),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Navigate back to the login page
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => LoginPage()),
+            (Route<dynamic> route) => false,
+          );
+        },
+        child: Icon(Icons.home),
+        tooltip: 'Go to Home',
       ),
     );
   }
