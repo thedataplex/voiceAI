@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' as foundation;
 import 'package:flutter/foundation.dart' show kIsWeb, kReleaseMode;
+import 'summary_page.dart';
 
 class SpeechToTextPage extends StatefulWidget {
   @override
@@ -20,27 +21,6 @@ class _SpeechToTextPageState extends State<SpeechToTextPage> {
   String _text = '';
   bool _isFieldReadOnly = true;
   late TextEditingController _textEditingController;
-  // static const String localBaseUrl = 'http://127.0.0.1:5000/';
-  // static const String productionBaseUrl = 'https://voiceai-app-f156169b04de.herokuapp.com';
-
-  // static const String baseUrl = bool.fromEnvironment('dart.vm.product')
-  //     ? productionBaseUrl
-  //     : localBaseUrl;
-  // static String get baseUrl {
-  //   if (foundation.kReleaseMode) {
-  //     // Use the Heroku URL in release mode
-  //     return 'https://voiceai-app-f156169b04de.herokuapp.com';
-  //   } else {
-  //     // Check if the app is running on Android
-  //     if (Platform.isAndroid) {
-  //       // Use the Android emulator's base URL
-  //       return 'http://10.0.2.2:5000'; // Use 10.0.2.2 for Android emulator
-  //     } else {
-  //       // Use the local server URL in debug mode for other platforms
-  //       return 'http://127.0.0.1:5000/';
-  //     }
-  //   }
-  // }
 
   static String get baseUrl {
     // When running on the web, decide based on the release mode
@@ -157,11 +137,22 @@ void _listen()  {
 }
 
 void _nextQuestion() {
-  // Save the current answer to the corresponding controller before moving to the next question
-  if (_textEditingController.text.isNotEmpty) {
-    answers[currentPromptIndex] = _textEditingController.text;
-    _controllers[currentPromptIndex].text = _textEditingController.text;
+  // Check if the text field is empty before proceeding
+  if (_textEditingController.text.isEmpty) {
+    // If text field is empty, show a SnackBar to inform the user
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Field cannot be empty, please provide an answer.'),
+        backgroundColor: Colors.red, // Optional: Adds color to SnackBar for emphasis
+        duration: Duration(seconds: 2),
+      ),
+    );
+    return; // Exit the function to prevent proceeding to the next question
   }
+
+  // Save the current answer to the corresponding controller before moving to the next question
+  answers[currentPromptIndex] = _textEditingController.text;
+  _controllers[currentPromptIndex].text = _textEditingController.text;
 
   // Check if there are more questions
   if (currentPromptIndex < prompts.length - 1) {
@@ -179,6 +170,7 @@ void _nextQuestion() {
     });
   }
 }
+
   void _submitField(String fieldValue) {
     answers[currentPromptIndex] = fieldValue;
     _controllers[currentPromptIndex].text = fieldValue;
@@ -199,8 +191,19 @@ void _nextQuestion() {
     }
   }
 
-
 void _submitRecord(List<String> updatedAnswers) async {
+  // Check if any field is empty before proceeding
+  if (updatedAnswers.any((answer) => answer.isEmpty)) {
+    // If any field is empty, show a SnackBar to inform the user
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('All fields must be filled. Please check your entries.'),
+        backgroundColor: Colors.red,
+      ),
+    );
+    return; // Exit the function to prevent the record submission
+  }
+
   final url = Uri.parse("$baseUrl/save_record");
   final response = await http.post(
     url,
@@ -215,6 +218,21 @@ void _submitRecord(List<String> updatedAnswers) async {
   );
 
   if (response.statusCode == 201) {
+    // If the record is saved successfully, navigate to the SummaryPage
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SummaryPage(
+          data: {
+            "First Name": updatedAnswers[0],
+            "Last Name": updatedAnswers[1],
+            "Date of Birth": updatedAnswers[2],
+            "SSN": updatedAnswers[3],
+            "Zip Code": updatedAnswers[4],
+          },
+        ),
+      ),
+    );
     _showSnackBar(context, 'Record saved successfully.');
   } else if (response.statusCode == 409) {
     _showSnackBar(context, 'Record already exists.');
@@ -222,6 +240,8 @@ void _submitRecord(List<String> updatedAnswers) async {
     _showSnackBar(context, 'An error occurred while saving the record.');
   }
 }
+
+
 
 void _showSnackBar(BuildContext context, String message) {
   final snackBar = SnackBar(content: Text(message));
