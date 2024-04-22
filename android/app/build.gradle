@@ -52,6 +52,15 @@ android {
         minSdkVersion 21
     }
 
+    signingConfigs {
+        release {
+            keyAlias 'key'
+            keyPassword System.getenv("KEY_PASSWORD") // Remove the default value
+            storeFile file(System.getenv("KEYSTORE_PATH")) // Directly use the environment variable
+            storePassword System.getenv("KEYSTORE_PASSWORD") // Remove the default value
+        }
+    }
+
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
