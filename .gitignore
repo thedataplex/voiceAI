@@ -13,6 +13,14 @@ migrate_working_dir/
 auth_server/.env
 venv/
 
+# Keystore files
+*.jks
+*.keystore
+
+# Local properties
+/local.properties
+
+
 # IntelliJ related
 *.iml
 *.ipr
