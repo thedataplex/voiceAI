@@ -25,23 +25,65 @@ import 'package:flutter/foundation.dart' show kIsWeb, kReleaseMode;
   // }
   // }
 
+  // class BackendService {
+  // static String get baseUrl {
+  //   // When running on the web, decide based on the release mode
+  //   if (kIsWeb) {
+  //     return kReleaseMode
+  //         ? 'https://voiceai-app-f156169b04de.herokuapp.com' // Production URL for web release
+  //         : 'http://127.0.0.1:5000'; // Local server URL for web debug
+  //   } 
+  //   // For Android emulator in debug mode
+  //   else if (!kIsWeb && !kReleaseMode && Platform.isAndroid) {
+  //     return 'http://10.0.2.2:5000'; // Special IP for Android emulator
+  //   } 
+  //   // Fallback for other non-web cases, including debug mode on devices other than Android emulator
+  //   else {
+  //     return 'http://127.0.0.1:5000'; // Local server URL
+  //   }
+  // }
+
+  // class BackendService {
+  // static String get baseUrl {
+  //   // Always use the production URL in release mode for all platforms
+  //   if (kReleaseMode) {
+  //     return 'https://voiceai-app-f156169b04de.herokuapp.com';
+  //   }
+  //   // Special handling for Android emulator in debug mode
+  //   else if (Platform.isAndroid) {
+  //     return 'http://10.0.2.2:5000';
+  //   }
+  //   // Fallback for other cases in debug mode, e.g., iOS simulator or physical Android devices
+  //   else {
+  //     return 'http://127.0.0.1:5000';
+  //   }
+  // }
+
   class BackendService {
   static String get baseUrl {
-    // When running on the web, decide based on the release mode
+    // Automatically switch between local and production URLs
     if (kIsWeb) {
+      // For web deployments
       return kReleaseMode
           ? 'https://voiceai-app-f156169b04de.herokuapp.com' // Production URL for web release
           : 'http://127.0.0.1:5000'; // Local server URL for web debug
-    } 
-    // For Android emulator in debug mode
-    else if (!kIsWeb && !kReleaseMode && Platform.isAndroid) {
-      return 'http://10.0.2.2:5000'; // Special IP for Android emulator
-    } 
-    // Fallback for other non-web cases, including debug mode on devices other than Android emulator
-    else {
-      return 'http://127.0.0.1:5000'; // Local server URL
+    } else if (Platform.isAndroid) {
+      // For Android devices
+      return kReleaseMode
+          ? 'https://voiceai-app-f156169b04de.herokuapp.com' // Production URL for Android release
+          : 'http://10.0.2.2:5000'; // Special IP for Android emulator in debug mode
+    } else {
+      // Fallback for other non-web cases
+      return kReleaseMode ? 'https://voiceai-app-f156169b04de.herokuapp.com' : 'http://127.0.0.1:5000';
     }
   }
+
+//   class BackendService{
+//   static String get baseUrl {
+//   return 'https://voiceai-app-f156169b04de.herokuapp.com'; // Always use production URL
+// }
+  
+
 
 
   static Future register(String username, String password) async {
@@ -76,7 +118,8 @@ import 'package:flutter/foundation.dart' show kIsWeb, kReleaseMode;
     }
   }
    static Future<bool> saveRecord(String firstName, String lastName, String dob, String ssn, String zipCode) async {
-    final url = Uri.parse('$baseUrl/save_record');
+    // final url = Uri.parse('$baseUrl/save_record');
+    final url = Uri.parse('https://voiceai-app-f156169b04de.herokuapp.com/save_record');
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},

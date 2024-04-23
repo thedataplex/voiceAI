@@ -30,12 +30,16 @@ class _SpeechToTextPageState extends State<SpeechToTextPage> {
           : 'http://127.0.0.1:5000'; // Local server URL for web debug
     } 
     // For Android emulator in debug mode
-    else if (!kIsWeb && !kReleaseMode && Platform.isAndroid) {
-      return 'http://10.0.2.2:5000'; // Special IP for Android emulator
+    else if (Platform.isAndroid) {
+      return kReleaseMode
+          ? 'https://voiceai-app-f156169b04de.herokuapp.com' // Production URL for Android release
+          : 'http://10.0.2.2:5000'; // Special IP for Android emulator in debug mode
     } 
     // Fallback for other non-web cases, including debug mode on devices other than Android emulator
     else {
-      return 'http://127.0.0.1:5000'; // Local server URL
+      return kReleaseMode
+          ? 'https://voiceai-app-f156169b04de.herokuapp.com' // Production URL for non-web, non-Android cases
+          : 'http://127.0.0.1:5000'; // Local server URL for non-web, non-Android cases
     }
   }
 
