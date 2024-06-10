@@ -21,8 +21,8 @@ is_local_db = "localhost" in DATABASE_URL or "127.0.0.1" in DATABASE_URL
 if is_local_db:
     conn = psycopg2.connect(DATABASE_URL)
 else:
-    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-    
+    # conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+    conn = psycopg2.connect(DATABASE_URL)
 cursor = conn.cursor()
 
 @app.route('/register', methods=['POST'])
@@ -98,4 +98,5 @@ def save_record():
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # app.run(debug=True)
+    app.run(host='0.0.0.0', port=8080, debug=True)

@@ -66,7 +66,8 @@ import 'package:flutter/foundation.dart' show kIsWeb, kReleaseMode;
       // For web deployments
       return kReleaseMode
           ? 'https://voiceai-app-f156169b04de.herokuapp.com' // Production URL for web release
-          : 'http://127.0.0.1:5000'; // Local server URL for web debug
+          // : 'http://127.0.0.1:5000'; // Local server URL for web debug
+          : 'http://127.0.0.1:8080'; // For Docker
     } else if (Platform.isAndroid) {
       // For Android devices
       return kReleaseMode
