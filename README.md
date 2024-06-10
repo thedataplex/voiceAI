@@ -85,8 +85,6 @@ Then login after that and you should get to the app.
 # Pre-Requisite
 1. Make sure you download docker desktop first
 2. Once Docker Desktop is downloaded run the following commands
-    a. `docker-compose up -d --build`
-3. To stop the containers run
-    a. `docker-compose stop`
-4. To remove the containers run
-    a. `docker-compose down`
+3. To Build the application run -> `docker-compose up -d --build`
+4. To stop the containers run -> `docker-compose stop`
+5. To remove the containers run -> `docker-compose down`
