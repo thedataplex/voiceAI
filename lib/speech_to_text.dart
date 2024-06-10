@@ -27,7 +27,8 @@ class _SpeechToTextPageState extends State<SpeechToTextPage> {
     if (kIsWeb) {
       return kReleaseMode
           ? 'https://voiceai-app-f156169b04de.herokuapp.com' // Production URL for web release
-          : 'http://127.0.0.1:5000'; // Local server URL for web debug
+          // : 'http://127.0.0.1:5000'; // Local server URL for web debug
+          : 'http://127.0.0.1:8080'; // For Docker
     } 
     // For Android emulator in debug mode
     else if (Platform.isAndroid) {
@@ -39,7 +40,8 @@ class _SpeechToTextPageState extends State<SpeechToTextPage> {
     else {
       return kReleaseMode
           ? 'https://voiceai-app-f156169b04de.herokuapp.com' // Production URL for non-web, non-Android cases
-          : 'http://127.0.0.1:5000'; // Local server URL for non-web, non-Android cases
+          // : 'http://127.0.0.1:5000'; // Local server URL for non-web, non-Android cases
+          : 'http://127.0.0.1:5000'; // For Docker
     }
   }
 
