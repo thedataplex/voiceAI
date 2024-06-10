@@ -81,3 +81,12 @@ Then first you need to create username
 Then login after that and you should get to the app.
 
 ``
+## DOCKERIZED THE APPLICATION --> INSTRUCTIONS TO RUN
+# Pre-Requisite
+1. Make sure you download docker desktop first
+2. Once Docker Desktop is downloaded run the following commands
+    a. `docker-compose up -d --build`
+3. To stop the containers run
+    a. `docker-compose stop`
+4. To remove the containers run
+    a. `docker-compose down`
