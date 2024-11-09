@@ -60,7 +60,7 @@ create a file called .env in auth_server folder and add the following lines
 ```
 DB_NAME=postgres
 DB_USER=postgres
-DB_PASSWORD=Stocker@365
+DB_PASSWORD=xxx
 DB_HOST=localhost
 ```
 
